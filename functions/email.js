@@ -11,16 +11,18 @@ const transporter = require("nodemailer").createTransport({
 ((email) => {
     email.sendEmail = async (data) => {
     try {
+
       const mailOptions = {
-        from: data.email,
-        to: process.env.EMAIL,
+        from: process.env.EMAIL,
+        to: process.env.MYEMAIL,
         subject: data.subject || data.name || "",
-        html: `<pre>${data.message} <br/><br/> ${data.name}<br/> ${data.contact}</pre>`, // html body
+        html: `<pre>${data.message} <br/><br/> ${data.name}<br/> ${data.contact} <br/> ${data.email }</pre>`, // html body
       };
       // send mail with defined transport object
       const info = await transporter.sendMail(mailOptions);
       return info;
     } catch (error) {
+      return error;
         console.log("-----------",error)
     }
   };

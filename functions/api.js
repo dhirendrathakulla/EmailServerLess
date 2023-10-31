@@ -10,8 +10,8 @@ const cacheStrore = new NodeCache( { stdTTL: 24 * 60 * 60 } ); // 24 hours
 
 const path = require("path");
 const dotenv = require("dotenv");
-
-dotenv.config({ path: path.join(__dirname, "/.env") });
+if(!process.env.MYEMAIL)
+dotenv.config({ path: path.join(__dirname, "../.env") });
 const serverless = require("serverless-http");
 const router = express.Router()
 
@@ -50,14 +50,14 @@ router.get("/", async (req, res) => {
     }
     setEmailCountToCache(req.body.email)
     if(getEmailCountFromCache(req.body.email) > 5) {
-        return  res.status(200).send({status: 200,message:"Email send already !!"});
+        return  res.status(200).send({status: 429,message:"Email send already !!"});
     };
    const resp = await email.sendEmail(req.body)
     return res.status(200).send({status: 200,data: resp});
   });
 // var client = new db.Client({ secret: 'YOUR_FAUNADB_SECRET' })
-
-// app.listen(PORT, () => {
+// 
+// app.listen(2000, () => {
   
 app.use("/.netlify/functions/api",router)
 
